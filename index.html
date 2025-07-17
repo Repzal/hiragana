@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hiragana Drill</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-anim"></div>
+  <div class="main-panel">
+    <h1>Hiragana Drill</h1>
+
+    <div id="chart-panel" class="panel fade-in">
+      <h2>Hiragana Chart</h2>
+      <div id="chart"></div>
+      <div class="panel-controls">
+        <button id="select-all">Select All</button>
+        <button id="deselect-all">Deselect All</button>
+        <button id="start-quiz" class="accent">Start Quiz</button>
+      </div>
+      <div id="warn" class="warn" style="display: none;">
+        Select at least 4 kana to quiz.
+      </div>
+    </div>
+
+    <div id="quiz-panel" class="panel fade-in" style="display: none;">
+      <h2>Quiz: <span id="score">0/0</span></h2>
+      <div id="quiz-q"></div>
+      <button id="exit-quiz" class="muted">Exit Quiz</button>
+    </div>
+
+    <footer>
+      <span>
+        Made by <a href="https://github.com/Repzal" target="_blank">You</a> — Hiragana data powered by open source.
+      </span>
+    </footer>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
