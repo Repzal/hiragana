@@ -13,7 +13,6 @@ const chart = [
   ["N",  ["ん","n"]]
 ];
 
-// Flatten for quiz pool
 function flattenChart() {
   return chart.flatMap(row =>
     row.slice(1).filter(Boolean).map(([kana, romaji]) => ({kana, romaji}))
@@ -21,22 +20,53 @@ function flattenChart() {
 }
 const flat = flattenChart();
 
-// State
+// --- Session/Stat State ---
+let sessionCount = 0;
+let totalCorrect = 0;
+let totalIncorrect = 0;
+let kanaStats = {};
+flat.forEach(h => { kanaStats[h.kana] = { correct: 0, incorrect: 0 }; });
+
+// --- App State ---
 let selected = flat.map(h => h.kana);
 let quizMode = false;
 let quizScore = { correct: 0, total: 0 };
 let quizQ = null;
 let quizChoices = [];
 
-// Elements
+// --- UI Elements ---
 const chartDiv = document.getElementById("chart");
 const quizPanel = document.getElementById("quiz-panel");
 const chartPanel = document.getElementById("chart-panel");
 const warnDiv = document.getElementById("warn");
 const scoreSpan = document.getElementById("score");
 const quizQDiv = document.getElementById("quiz-q");
+const sessionsCountSpan = document.getElementById("sessions-count");
+const totalCorrectSpan = document.getElementById("total-correct");
+const totalIncorrectSpan = document.getElementById("total-incorrect");
 
-// Render Chart
+// --- Helper Functions ---
+function shuffle(arr) {
+  return arr
+    .map(a => [Math.random(), a])
+    .sort((a, b) => a[0]-b[0])
+    .map(a => a[1]);
+}
+function getKanaLevel(kana) {
+  const stat = kanaStats[kana];
+  const attempts = stat.correct + stat.incorrect;
+  if (attempts < 3) return "gray";
+  let pct = attempts ? (stat.correct / attempts) : 0;
+  if (pct >= 0.8) return "green";
+  if (pct >= 0.5) return "amber";
+  return "red";
+}
+function updateStatsPanel() {
+  sessionsCountSpan.textContent = sessionCount;
+  totalCorrectSpan.textContent = totalCorrect;
+  totalIncorrectSpan.textContent = totalIncorrect;
+}
+
 function renderChart() {
   chartDiv.innerHTML = "";
   chart.forEach(row => {
@@ -48,7 +78,6 @@ function renderChart() {
       lbl.textContent = row[0];
       rowDiv.appendChild(lbl);
     } else {
-      // For the first row (no label), keep space
       rowDiv.appendChild(document.createElement("span")).className = "row-label";
     }
     for (let i=1; i<6; ++i) {
@@ -56,7 +85,11 @@ function renderChart() {
         const [kana, romaji] = row[i];
         const btn = document.createElement("button");
         btn.className = "kana-btn fade-in";
-        btn.innerHTML = `<span class="kana-char">${kana}</span><span class="kana-romaji">${romaji}</span>`;
+        btn.innerHTML = `
+          <span class="kana-char">${kana}</span>
+          <span class="kana-romaji">${romaji}</span>
+          <span class="kana-indicator ${getKanaLevel(kana)}"></span>
+        `;
         if (selected.includes(kana)) btn.classList.add("selected");
         btn.onclick = () => {
           if (selected.includes(kana)) {
@@ -96,16 +129,11 @@ function updateQuizBtn() {
   document.getElementById("start-quiz").disabled = selected.length < 4;
 }
 
-// Quiz
-function shuffle(arr) {
-  return arr
-    .map(a => [Math.random(), a])
-    .sort((a, b) => a[0]-b[0])
-    .map(a => a[1]);
-}
 function startQuiz() {
   quizScore = { correct: 0, total: 0 };
   quizMode = true;
+  sessionCount++;
+  updateStatsPanel();
   chartPanel.style.display = "none";
   quizPanel.style.display = "";
   nextQuizQ();
@@ -145,21 +173,28 @@ function handleQuizChoice(choice, btn, answer) {
   if (choice.kana === answer.kana) {
     btn.classList.add("correct");
     quizScore.correct++;
+    totalCorrect++;
+    kanaStats[answer.kana].correct++;
   } else {
     btn.classList.add("incorrect");
+    totalIncorrect++;
+    kanaStats[answer.kana].incorrect++;
     // highlight correct
     let idx = quizChoices.findIndex(h => h.kana === answer.kana);
     document.querySelectorAll(".quiz-choice")[idx].classList.add("correct");
   }
   quizScore.total++;
+  updateStatsPanel();
+  renderChart();
   scoreSpan.textContent = `${quizScore.correct}/${quizScore.total}`;
   setTimeout(nextQuizQ, 800);
 }
 
-// Init
+// --- Init ---
 renderChart();
 updateWarn();
 updateQuizBtn();
+updateStatsPanel();
 
 document.getElementById("select-all").onclick = selectAll;
 document.getElementById("deselect-all").onclick = deselectAll;
