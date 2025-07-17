@@ -1,24 +1,50 @@
+/* ======= GLOBALS ======= */
 body {
   margin: 0;
   font-family: 'Segoe UI', 'Noto Sans JP', Arial, sans-serif;
   color: #e0e0ff;
-  background: #181025;
+  background: #10081a; /* deep black */
   min-height: 100vh;
   overflow-x: hidden;
 }
+
+/* ======= ANIMATED DARK PURPLE BACKGROUND ======= */
 .bg-anim {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at 60% 25%, #2d0b4d 0%, #181025 70%);
-  animation: bgmove 12s linear infinite alternate;
-  opacity: 0.86;
+  background:
+    radial-gradient(ellipse 60% 55% at 20% 30%, #3d145c 0%, transparent 70%),
+    radial-gradient(ellipse 55% 50% at 70% 75%, #2f0945 0%, transparent 65%),
+    radial-gradient(ellipse 35% 30% at 80% 15%, #6c28a8 0%, transparent 80%),
+    radial-gradient(ellipse 40% 35% at 40% 80%, #24153f 0%, transparent 75%),
+    radial-gradient(ellipse 60% 55% at 60% 60%, #2e0c40 0%, transparent 70%);
+  background-blend-mode: lighten, lighten, lighten, lighten, normal;
+  animation: bgmove 18s linear infinite alternate;
+  opacity: 0.92;
 }
+
 @keyframes bgmove {
-  0% { background-position: 70% 20%, 30% 80%; }
-  100% { background-position: 30% 80%, 70% 20%; }
+  0% {
+    background-position:
+      18% 28%,
+      72% 68%,
+      82% 12%,
+      42% 78%,
+      58% 61%;
+  }
+  100% {
+    background-position:
+      26% 38%,
+      65% 80%,
+      70% 25%,
+      50% 88%,
+      65% 55%;
+  }
 }
+
+/* ======= MAIN PANEL ======= */
 .main-panel {
   position: relative;
   z-index: 1;
@@ -33,6 +59,8 @@ body {
   flex-direction: column;
   gap: 1.7rem;
 }
+
+/* ======= TITLES ======= */
 h1 {
   font-size: 2.5rem;
   letter-spacing: 0.03em;
@@ -40,7 +68,7 @@ h1 {
   margin: 0 0 1.2rem 0;
   text-align: center;
   color: #c197fd;
-  text-shadow: 0 2px 22px #7d27e2;
+  text-shadow: 0 2px 30px #7d27e2;
   opacity: 0.97;
   animation: fadeIn 1.2s;
 }
@@ -51,6 +79,8 @@ h2 {
   font-size: 1.3rem;
   letter-spacing: 0.01em;
 }
+
+/* ======= PANELS AND ANIMATION ======= */
 .panel {
   background: rgba(18, 11, 28, 0.95);
   border-radius: 16px;
@@ -68,6 +98,8 @@ h2 {
   from { opacity: 0; transform: translateY(30px);}
   to { opacity: 1; transform: none;}
 }
+
+/* ======= CHART ======= */
 .chart {
   display: flex;
   flex-direction: column;
@@ -90,7 +122,7 @@ h2 {
   opacity: 0.75;
 }
 .kana-btn {
-  background: linear-gradient(150deg, #2a144a 70%, #431e6e 100%);
+  background: linear-gradient(150deg, #221035 65%, #431e6e 100%);
   border: none;
   border-radius: 10px;
   color: #f1e8ff;
@@ -137,6 +169,8 @@ h2 {
   letter-spacing: 0.01em;
   opacity: 0.7;
 }
+
+/* ======= PANEL CONTROLS ======= */
 .panel-controls {
   display: flex;
   gap: 0.6em;
@@ -175,6 +209,8 @@ button:disabled {
   opacity: 0.59;
   cursor: not-allowed;
 }
+
+/* ======= WARNINGS ======= */
 .warn {
   margin-top: 0.7em;
   color: #ffb6c1;
@@ -186,6 +222,8 @@ button:disabled {
   font-weight: 500;
   box-shadow: 0 1px 10px #ffb6c11b;
 }
+
+/* ======= QUIZ PANEL ======= */
 #quiz-panel {
   text-align: center;
 }
@@ -234,6 +272,8 @@ button:disabled {
 .quiz-choice:active {
   transform: scale(0.95);
 }
+
+/* ======= FOOTER ======= */
 footer {
   margin: 2.5em auto 0 auto;
   color: #7a6a9c;
@@ -246,6 +286,8 @@ footer a {
   text-decoration: none;
   font-weight: 500;
 }
+
+/* ======= RESPONSIVE ======= */
 @media (max-width: 700px) {
   .main-panel { padding: 1.2rem 0.4rem; }
 }
